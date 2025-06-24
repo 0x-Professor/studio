@@ -11,12 +11,12 @@ export function Header() {
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <p className="font-semibold">Muhammad Mazhar Saeed</p>
+            <p className="font-semibold">Professor</p>
             <p className="text-xs text-muted-foreground">Welcome back</p>
           </div>
           <Avatar>
-            <AvatarImage src="https://placehold.co/100x100.png" alt="Muhammad Mazhar Saeed" data-ai-hint="man portrait" />
-            <AvatarFallback>MS</AvatarFallback>
+            <AvatarImage src="https://placehold.co/100x100.png" alt="Professor" data-ai-hint="man portrait" />
+            <AvatarFallback>P</AvatarFallback>
           </Avatar>
         </div>
       </div>

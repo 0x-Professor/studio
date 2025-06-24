@@ -27,7 +27,7 @@ export function CompanionMode() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello! How are you feeling today? Tell me what's on your mind.",
+      content: "Hello, Professor. How may I assist you today? You can ask me to add tasks to your to-do list.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -142,7 +142,7 @@ export function CompanionMode() {
                 </div>
                  {message.role === "user" && (
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback><User className="h-5 w-5"/></AvatarFallback>
+                    <AvatarFallback>P</AvatarFallback>
                   </Avatar>
                 )}
               </div>
