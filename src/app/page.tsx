@@ -38,8 +38,8 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
-      <main className="flex-1 p-4 sm:p-6 md:p-8">
-        <div className="container max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-3 auto-rows-max gap-6">
+      <main className="flex-1 p-4 md:p-6">
+        <div className="container max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-3 auto-rows-max gap-4 lg:gap-6">
           <div className="lg:col-span-2">
             <AppUsageChart data={appUsageData} />
           </div>
