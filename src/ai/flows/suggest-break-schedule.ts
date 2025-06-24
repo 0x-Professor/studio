@@ -47,7 +47,7 @@ const prompt = ai.definePrompt({
 
   "Take a 15-minute break every 2 hours. During your breaks, try to get away from the screen, stretch, or do something you enjoy."
 
-  Break Schedule:`,
+  Break Schedule`,
 });
 
 const suggestBreakScheduleFlow = ai.defineFlow(

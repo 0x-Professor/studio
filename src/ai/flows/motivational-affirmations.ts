@@ -73,7 +73,6 @@ const assistantFlow = ai.defineFlow(
         return "Consider it done, Professor.";
       }
 
-      // Fallback for any other case
       console.warn("Assistant flow received an unexpected response from the model.");
       return "I'm sorry, Professor, I'm having trouble processing that request.";
 

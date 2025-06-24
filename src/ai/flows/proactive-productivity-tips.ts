@@ -46,7 +46,7 @@ const prompt = ai.definePrompt({
   output: {schema: ProactiveProductivityTipsOutputSchema},
   prompt: `You are Jarvis, a personal AI assistant, and you are proactively providing productivity tips to the user, {{{userName}}}.
 
-  Based on their app usage and task history, provide personalized productivity tips and a break schedule suggestion.
+  Based on their app usage and task history, provide personalized productivity tips and a break schedule suggestions.
 
   App Usage Summary: {{{appUsageSummary}}}
   Task History: {{{taskHistory}}}
@@ -66,3 +66,5 @@ const proactiveProductivityTipsFlow = ai.defineFlow(
     return output!;
   }
 );
+
+

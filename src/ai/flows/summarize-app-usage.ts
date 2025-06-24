@@ -14,7 +14,7 @@ import {z} from 'genkit';
 const SummarizeAppUsageInputSchema = z.object({
   appUsageData: z
     .string()
-    .describe('A summary of the user activity data for the day.'),
+    .describe('A summary of the user activity data for the day'),
 });
 export type SummarizeAppUsageInput = z.infer<typeof SummarizeAppUsageInputSchema>;
 
