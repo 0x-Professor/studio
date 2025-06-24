@@ -27,7 +27,7 @@ export function CompanionMode() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello, Professor. How may I assist you today? You can ask me to add tasks to your to-do list.",
+      content: "Hello, Professor. How may I assist you today?",
     },
   ]);
   const [input, setInput] = useState("");

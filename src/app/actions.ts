@@ -37,7 +37,7 @@ export async function getAssistantResponseWithAudio(input: Pick<AssistantRespons
       return { response, audioDataUri };
     } catch (error) {
       console.error("Error in getAssistantResponseWithAudio:", error);
-      const fallbackResponse = "There is a strength within you that is greater than any obstacle, Professor.";
+      const fallbackResponse = "I'm sorry, Professor. I seem to have encountered an issue. Please try again.";
       return { response: fallbackResponse, audioDataUri: "" };
     }
 }

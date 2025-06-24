@@ -66,12 +66,21 @@ const assistantFlow = ai.defineFlow(
     outputSchema: AssistantResponseOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    if (!output?.response) {
-      const {output: fallbackOutput} = await prompt(input);
-      if (fallbackOutput) return fallbackOutput;
-      return { response: "I'm listening, Professor." };
+    const result = await prompt(input);
+    
+    // The prompt is supposed to return a structured JSON response.
+    // If it succeeds, result.output will be populated.
+    if (result.output?.response) {
+      return result.output;
     }
-    return output;
+
+    // If parsing fails, the model might have still returned a valid text response.
+    // We can wrap this in the expected structure.
+    if (result.text) {
+      return { response: result.text };
+    }
+
+    // If we have neither, it's an issue. Let's return a clear message.
+    return { response: "I'm sorry Professor, I was unable to process that. Could you please rephrase?" };
   }
 );
