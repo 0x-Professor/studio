@@ -64,3 +64,13 @@ export function toggleTask(id: number) {
         recordActivity(`Toggled task "${task.text}" to ${task.completed ? 'completed' : 'incomplete'}`);
     }
 }
+
+export function toggleTaskByText(text: string): Task | undefined {
+    const task = tasks.find(t => t.text.toLowerCase() === text.trim().toLowerCase());
+    if (task) {
+        toggleTask(task.id);
+        // Return the updated task object
+        return tasks.find(t => t.id === task.id);
+    }
+    return undefined;
+}

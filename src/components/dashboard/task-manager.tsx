@@ -25,7 +25,7 @@ export function TaskManager() {
 
   useEffect(() => {
     loadTasks();
-    const interval = setInterval(loadTasks, 2000); // Refresh tasks more frequently
+    const interval = setInterval(loadTasks, 1000); // Refresh tasks every second
     return () => clearInterval(interval);
   }, []);
 

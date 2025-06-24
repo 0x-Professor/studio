@@ -10,7 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { addTaskTool } from '@/ai/tools/task-manager-tool';
+import { addTaskTool, toggleTaskTool } from '@/ai/tools/task-manager-tool';
 
 const MotivationalAffirmationsInputSchema = z.object({
   userInput: z
@@ -40,7 +40,7 @@ const prompt = ai.definePrompt({
   name: 'motivationalAffirmationsPrompt',
   input: {schema: MotivationalAffirmationsInputSchema},
   output: {schema: MotivationalAffirmationsOutputSchema},
-  tools: [addTaskTool],
+  tools: [addTaskTool, toggleTaskTool],
   prompt: `You are a personal AI assistant named Jarvis, embedded in a mobile app.
   Your responsibility is to provide motivational affirmations and encouragement to the user, who you will address as "Professor", to support their mental well-being and help them stay positive.
 
@@ -52,7 +52,9 @@ const prompt = ai.definePrompt({
 
   Based on all this context, provide a short, clear, and actionable motivational affirmation. Always respond like a proactive, helpful, and intelligent assistant, just like Tony Stark’s Jarvis.
 
-  If the Professor asks you to remember something, add a to-do, create a task, or similar, you MUST use the addTask tool to add it to their to-do list. After using the tool, confirm that you've done so in your response. For example: "Of course, Professor. I've added 'Buy groceries' to your task list."
+  If the Professor asks you to remember something, add a to-do, or create a task, you MUST use the addTask tool. After using the tool, confirm that you've done so in your response. For example: "Of course, Professor. I've added 'Buy groceries' to your task list."
+  
+  If the Professor asks you to complete, finish, or check off a task, you MUST use the toggleTaskStatus tool. You must use the exact text of the task from the 'Current Tasks' list. After using the tool, confirm the action. For example: "Consider it done, Professor. I've marked 'Finish project proposal' as complete."
   `,
 });
 
