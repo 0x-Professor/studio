@@ -27,7 +27,7 @@ export async function getAssistantResponseWithAudio(input: Pick<AssistantRespons
         tasks: taskSummary,
       });
       
-      // If for any reason the response is empty, don't attempt to generate audio.
+      // If for any reason the response is empty, don't attempt to generate audio
       if (!response || response.trim() === "") {
         const fallback = "I'm sorry, Professor. I didn't quite understand. Could you please rephrase?";
         return { response: fallback, audioDataUri: "" };
