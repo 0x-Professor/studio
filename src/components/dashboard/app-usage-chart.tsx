@@ -1,12 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-import type { AppUsage } from "@/types";
 
 interface AppUsageChartProps {
-  data: AppUsage[];
 }
 
 const chartConfig = {
@@ -36,6 +35,20 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function AppUsageChart({ data }: AppUsageChartProps) {
+  const [appUsageData, setAppUsageData] = useState<any[]>([]);
+
+  useEffect(() => {
+    // In a real application, you would fetch this data from an API endpoint
+    // For this example, we'll simulate fetching data after a delay
+    const fetchData = async () => {
+      // Replace with actual data fetching logic
+      const response = await fetch("/api/app-usage"); // Example API endpoint
+      const data = await response.json();
+      setAppUsageData(data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
@@ -44,7 +57,7 @@ export function AppUsageChart({ data }: AppUsageChartProps) {
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer config={chartConfig} className="w-full h-full min-h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" data={appUsageData}>
             <BarChart data={data} accessibilityLayer margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
               <CartesianGrid vertical={false} />
               <XAxis
@@ -56,7 +69,7 @@ export function AppUsageChart({ data }: AppUsageChartProps) {
               />
               <YAxis />
               <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-              <Bar dataKey="hours" radius={[8, 8, 0, 0]}>
+              <Bar dataKey="hours" radius={[8, 8, 0, 0]} data={appUsageData}>
                 {data.map((entry) => (
                     <Cell key={`cell-${entry.app}`} fill={chartConfig[entry.app as keyof typeof chartConfig]?.color} />
                 ))}
