@@ -17,9 +17,9 @@ export async function BreakSchedule({ scheduleInfo }: { scheduleInfo: SuggestBre
   }
 
   return (
-    <Card>
+    <Card className="glassmorphic">
       <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-        <Coffee className="h-6 w-6 text-primary" />
+        <Coffee className="h-6 w-6 text-primary text-glow" />
         <CardTitle className="font-headline">Suggested Break</CardTitle>
       </CardHeader>
       <CardContent>

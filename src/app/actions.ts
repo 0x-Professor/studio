@@ -14,11 +14,17 @@ export async function getAffirmationWithAudio(input: Pick<MotivationalAffirmatio
 
     try {
       const activities = getUserActivities();
-      const activityHistory = activities.map(a => a.activity).slice(0, 5).join('; ');
+      const activityHistory = activities.map(a => a.activity).slice(0, 5).join('; ') || "No recent activity.";
+
+      const tasks = getTasks();
+      const taskSummary = tasks.length > 0
+        ? `Pending: ${tasks.filter(t => !t.completed).map(t => t.text).join(', ')}. Completed: ${tasks.filter(t => t.completed).map(t => t.text).join(', ')}.`
+        : "No tasks in the list.";
 
       const { affirmation } = await motivationalAffirmations({ 
         userInput: input.userInput,
         activityHistory,
+        tasks: taskSummary,
       });
       
       if (!affirmation) {

@@ -17,9 +17,9 @@ export async function ProductivityTips({ userInfo }: { userInfo: ProactiveProduc
   }
 
   return (
-    <Card>
+    <Card className="glassmorphic">
       <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-        <Lightbulb className="h-6 w-6 text-primary" />
+        <Lightbulb className="h-6 w-6 text-primary text-glow" />
         <CardTitle className="font-headline">Proactive Tips</CardTitle>
       </CardHeader>
       <CardContent>

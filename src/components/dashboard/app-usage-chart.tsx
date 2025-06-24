@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Cell }
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import type { AppUsage } from "@/types";
+import { BarChartBig } from "lucide-react";
 
 interface AppUsageChartProps {}
 
@@ -35,7 +36,6 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function AppUsageChart({}: AppUsageChartProps) {
-  const chartProps = { width: 500, height: 300 } satisfies ComponentProps<typeof BarChart>;
   const [appUsageData, setAppUsageData] = useState<AppUsage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,20 +59,23 @@ export function AppUsageChart({}: AppUsageChartProps) {
   }, []);
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="glassmorphic h-full flex flex-col">
       <CardHeader>
-        <CardTitle className="font-headline">App Usage Today</CardTitle>
+        <div className="flex flex-row items-center gap-4">
+          <BarChartBig className="h-6 w-6 text-primary text-glow" />
+          <CardTitle className="font-headline">App Usage Today</CardTitle>
+        </div>
         <CardDescription>Your most used applications today.</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         {isLoading ? (
             <div className="flex items-center justify-center h-full min-h-[300px]">
-                <p>Loading chart data...</p>
+                <p className="text-muted-foreground">Loading chart data...</p>
             </div>
         ) : (
             <ChartContainer config={chartConfig} className="w-full h-full min-h-[300px]">
               <BarChart data={appUsageData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" />
                   <XAxis
                   dataKey="app"
                   tickLine={false}
@@ -80,7 +83,7 @@ export function AppUsageChart({}: AppUsageChartProps) {
                   axisLine={false}
                   tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label || value}
                   />
-                  <YAxis />
+                  <YAxis stroke="hsl(var(--foreground) / 0.8)"/>
                   <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
                   <Bar dataKey="hours" radius={[8, 8, 0, 0]}>
                   {appUsageData.map((entry) => (

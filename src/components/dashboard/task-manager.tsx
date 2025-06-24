@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ListTodo, Plus } from "lucide-react";
+import { ListChecks, Plus } from "lucide-react";
 import type { Task } from "@/types";
 import { getTasksAction, addTaskAction, toggleTaskAction } from "@/app/actions";
+import { cn } from "@/lib/utils";
 
 export function TaskManager() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -24,7 +25,7 @@ export function TaskManager() {
 
   useEffect(() => {
     loadTasks();
-    const interval = setInterval(loadTasks, 5000); // Refresh tasks every 5 seconds
+    const interval = setInterval(loadTasks, 2000); // Refresh tasks more frequently
     return () => clearInterval(interval);
   }, []);
 
@@ -47,9 +48,9 @@ export function TaskManager() {
   };
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="glassmorphic h-full flex flex-col">
       <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-        <ListTodo className="h-6 w-6 text-primary" />
+        <ListChecks className="h-6 w-6 text-primary text-glow" />
         <CardTitle className="font-headline">Task Manager</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col flex-grow gap-4">
@@ -59,18 +60,21 @@ export function TaskManager() {
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
             disabled={isPending}
+            className="bg-input/50 focus:bg-input"
           />
           <Button type="submit" size="icon" aria-label="Add task" disabled={isPending}>
             <Plus className="h-4 w-4" />
           </Button>
         </form>
         <ScrollArea className="flex-grow h-48">
-          <div className="space-y-4 pr-4">
+          <div className="space-y-2 pr-4">
             {isPending && tasks.length === 0 ? (
-                <p className="text-muted-foreground text-sm">Loading tasks...</p>
+                <p className="text-muted-foreground text-sm text-center py-4">Syncing tasks...</p>
+            ) : tasks.length === 0 ? (
+                <p className="text-muted-foreground text-sm text-center py-4">No tasks yet. Add one above.</p>
             ) : (
                 tasks.map((task) => (
-                <div key={task.id} className="flex items-center space-x-3 transition-all hover:bg-muted/50 p-2 rounded-md">
+                <div key={task.id} className="flex items-center space-x-3 transition-all bg-muted/20 hover:bg-muted/40 p-2 rounded-md">
                     <Checkbox
                     id={`task-${task.id}`}
                     checked={task.completed}
@@ -81,9 +85,9 @@ export function TaskManager() {
                     <label
                     id={`task-label-${task.id}`}
                     htmlFor={`task-${task.id}`}
-                    className={`flex-grow text-sm cursor-pointer transition-colors ${
-                        task.completed ? "text-muted-foreground line-through" : ""
-                    }`}
+                    className={cn("flex-grow text-sm cursor-pointer transition-colors",
+                        task.completed ? "text-muted-foreground line-through" : "text-foreground"
+                    )}
                     >
                     {task.text}
                     </label>

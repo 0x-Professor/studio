@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { getAffirmationWithAudio } from "@/app/actions";
-import { Heart, Mic, Send, Bot, User } from "lucide-react";
+import { Cpu, Mic, Send, User } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -49,7 +49,7 @@ export function CompanionMode() {
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setInput(transcript);
-        handleSubmit(transcript); // auto-submit after speech
+        handleSubmit(transcript);
       };
 
       recognition.onerror = (event: any) => {
@@ -66,12 +66,14 @@ export function CompanionMode() {
   }, []);
   
   useEffect(() => {
-    // Scroll to bottom when new messages are added
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: "smooth"
-      });
+      const scrollEl = scrollAreaRef.current.querySelector("div");
+      if(scrollEl) {
+        scrollEl.scrollTo({
+          top: scrollEl.scrollHeight,
+          behavior: "smooth"
+        });
+      }
     }
   }, [messages]);
 
@@ -109,13 +111,13 @@ export function CompanionMode() {
   };
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="glassmorphic h-full flex flex-col">
       <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-        <Heart className="h-6 w-6 text-primary" />
-        <CardTitle className="font-headline">Companion</CardTitle>
+        <Cpu className="h-6 w-6 text-primary text-glow" />
+        <CardTitle className="font-headline">Jarvis Companion</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col flex-grow gap-4 h-full">
-        <ScrollArea className="flex-grow h-64 pr-4" ref={scrollAreaRef}>
+      <CardContent className="flex flex-col flex-grow gap-4 h-full min-h-[400px]">
+        <ScrollArea className="flex-grow pr-4" ref={scrollAreaRef}>
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div
@@ -126,37 +128,37 @@ export function CompanionMode() {
                 )}
               >
                 {message.role === "assistant" && (
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback><Bot className="h-5 w-5"/></AvatarFallback>
+                  <Avatar className="w-8 h-8 bg-primary/20 border border-primary/50">
+                    <AvatarFallback className="bg-transparent"><Cpu className="h-5 w-5 text-primary text-glow"/></AvatarFallback>
                   </Avatar>
                 )}
                 <div
                   className={cn(
                     "max-w-xs md:max-w-md lg:max-w-lg rounded-lg p-3 text-sm",
                     message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-muted/50"
                   )}
                 >
                   <p>{message.content}</p>
                 </div>
                  {message.role === "user" && (
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback>P</AvatarFallback>
+                    <AvatarFallback><User className="h-5 w-5"/></AvatarFallback>
                   </Avatar>
                 )}
               </div>
             ))}
              {isPending && (
               <div className="flex items-start gap-3 justify-start">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback><Bot className="h-5 w-5"/></AvatarFallback>
-                </Avatar>
-                <div className="bg-muted rounded-lg p-3 text-sm">
+                <Avatar className="w-8 h-8 bg-primary/20 border border-primary/50">
+                    <AvatarFallback className="bg-transparent"><Cpu className="h-5 w-5 text-primary text-glow animate-pulse"/></AvatarFallback>
+                  </Avatar>
+                <div className="bg-muted/50 rounded-lg p-3 text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-foreground animate-pulse delay-0"></span>
-                    <span className="h-2 w-2 rounded-full bg-foreground animate-pulse delay-150"></span>
-                    <span className="h-2 w-2 rounded-full bg-foreground animate-pulse delay-300"></span>
+                    <span className="h-2 w-2 rounded-full bg-primary animate-pulse delay-0"></span>
+                    <span className="h-2 w-2 rounded-full bg-primary animate-pulse delay-150"></span>
+                    <span className="h-2 w-2 rounded-full bg-primary animate-pulse delay-300"></span>
                   </div>
                 </div>
               </div>
@@ -171,11 +173,11 @@ export function CompanionMode() {
           className="flex gap-2"
         >
           <Textarea
-            placeholder="Type your message..."
+            placeholder="Engage with Jarvis..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             rows={1}
-            className="flex-grow resize-none"
+            className="flex-grow resize-none bg-input/50 focus:bg-input"
             disabled={isPending || isListening}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -184,10 +186,10 @@ export function CompanionMode() {
               }
             }}
           />
-          <Button type="button" size="icon" onClick={handleListen} variant={isListening ? "destructive" : "outline"} disabled={isPending}>
-            <Mic className="h-4 w-4" />
+          <Button type="button" size="icon" onClick={handleListen} variant={isListening ? "destructive" : "outline"} disabled={isPending} className="bg-transparent hover:bg-primary/20">
+            <Mic className={cn("h-4 w-4", isListening && "text-destructive text-glow")} />
           </Button>
-          <Button type="submit" size="icon" disabled={isPending || input.trim() === ""}>
+          <Button type="submit" size="icon" disabled={isPending || input.trim() === ""} className="bg-primary hover:bg-primary/80 text-primary-foreground">
             <Send className="h-4 w-4" />
           </Button>
         </form>

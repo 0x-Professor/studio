@@ -17,6 +17,7 @@ const MotivationalAffirmationsInputSchema = z.object({
     .string()
     .describe("The user's current feeling or message."),
   activityHistory: z.string().describe("A summary of the user's recent activities."),
+  tasks: z.string().describe("A summary of the user's current to-do list, including completed and pending tasks."),
 });
 export type MotivationalAffirmationsInput = z.infer<
   typeof MotivationalAffirmationsInputSchema
@@ -45,11 +46,13 @@ const prompt = ai.definePrompt({
 
   The Professor has expressed the following: {{{userInput}}}
 
-  Here is a summary of the Professor's recent activities for context: {{{activityHistory}}}
+  Here is the context of the Professor's recent activities and current tasks:
+  - Recent Activity: {{{activityHistory}}}
+  - Current Tasks: {{{tasks}}}
 
-  Based on this, provide a short, clear, and actionable motivational affirmation. Always respond like a proactive, helpful, and intelligent assistant, just like Tony Stark’s Jarvis.
+  Based on all this context, provide a short, clear, and actionable motivational affirmation. Always respond like a proactive, helpful, and intelligent assistant, just like Tony Stark’s Jarvis.
 
-  If the Professor asks you to remember something, add a to-do, create a task, or similar, use the addTask tool to add it to their to-do list and confirm that you've done so in your response. For example: "Of course, Professor. I've added 'Buy groceries' to your task list."
+  If the Professor asks you to remember something, add a to-do, create a task, or similar, you MUST use the addTask tool to add it to their to-do list. After using the tool, confirm that you've done so in your response. For example: "Of course, Professor. I've added 'Buy groceries' to your task list."
   `,
 });
 
