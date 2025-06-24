@@ -55,13 +55,24 @@ const assistantFlow = ai.defineFlow(
     outputSchema: z.string(),
   },
   async input => {
-    const result = await prompt(input);
-    const responseText = result.text;
+    try {
+      const result = await prompt(input);
+      const responseText = result.text;
 
-    if (responseText) {
-      return responseText;
+      if (responseText && responseText.trim()) {
+        return responseText;
+      }
+      
+      // The model may not return text if it only used a tool and had nothing else to say.
+      // The prompt asks it to confirm actions, but as a fallback, we can provide a generic confirmation.
+      if (result.choices[0].finishReason === 'TOOL_CODE') {
+        return "Of course, Professor. I have handled that for you.";
+      }
+
+      return "I'm sorry, Professor. I didn't quite understand. Could you please rephrase?";
+    } catch (error) {
+      console.error("Error in assistantFlow:", error);
+      return "I apologize, Professor. I am currently facing a technical difficulty and cannot respond.";
     }
-
-    return "I'm sorry, Professor. I didn't quite understand. Could you please rephrase?";
   }
 );

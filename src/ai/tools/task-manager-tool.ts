@@ -11,6 +11,13 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { addTask, toggleTaskByText } from '@/ai/genkit';
 
+// Define a schema that matches the Task type from src/types/index.ts
+const TaskSchema = z.object({
+  id: z.number(),
+  text: z.string(),
+  completed: z.boolean(),
+});
+
 export const addTaskTool = ai.defineTool(
   {
     name: 'addTask',
@@ -18,7 +25,7 @@ export const addTaskTool = ai.defineTool(
     inputSchema: z.object({
       text: z.string().describe('The content of the task to add.'),
     }),
-    outputSchema: z.any(),
+    outputSchema: TaskSchema,
   },
   async (input) => {
     return addTask(input.text);
