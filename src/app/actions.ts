@@ -27,9 +27,9 @@ export async function getAssistantResponseWithAudio(input: Pick<AssistantRespons
         tasks: taskSummary,
       });
       
+      // If the response is empty, don't try to generate audio.
       if (!response) {
-        // This case should be handled by the flow's fallback now, but we keep it for safety.
-        throw new Error("Empty response received from AI.");
+        return { response: response || "", audioDataUri: "" };
       }
       
       const { audioDataUri } = await textToSpeech(response);
