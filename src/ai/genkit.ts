@@ -22,7 +22,7 @@ let nextTaskId = 4;
 
 export const ai = genkit({
   plugins: plugins,
-  model: 'googleai/gemini-pro',
+  model: 'googleai/gemini-1.5-flash-latest',
 });
 
 export function isAiEnabled() {
