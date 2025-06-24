@@ -1,15 +1,15 @@
 
 "use server";
 
-import { motivationalAffirmations, type MotivationalAffirmationsInput } from "@/ai/flows/motivational-affirmations";
+import { getAssistantResponse, type AssistantResponseInput } from "@/ai/flows/motivational-affirmations";
 import { textToSpeech } from "@/ai/flows/text-to-speech";
 import { isAiEnabled, recordActivity, getUserActivities, getTasks, addTask, toggleTask } from "@/ai/genkit";
 
-export async function getAffirmationWithAudio(input: Pick<MotivationalAffirmationsInput, 'userInput'>) {
+export async function getAssistantResponseWithAudio(input: Pick<AssistantResponseInput, 'userInput'>) {
     recordActivity(`"${input.userInput}"`);
     if (!isAiEnabled()) {
-      const fallbackAffirmation = "Please set your GOOGLE_API_KEY in the .env file to enable AI features.";
-      return { affirmation: fallbackAffirmation, audioDataUri: "" };
+      const fallbackResponse = "Please set your GOOGLE_API_KEY in the .env file to enable AI features.";
+      return { response: fallbackResponse, audioDataUri: "" };
     }
 
     try {
@@ -21,23 +21,24 @@ export async function getAffirmationWithAudio(input: Pick<MotivationalAffirmatio
         ? `Pending: ${tasks.filter(t => !t.completed).map(t => t.text).join(', ')}. Completed: ${tasks.filter(t => t.completed).map(t => t.text).join(', ')}.`
         : "No tasks in the list.";
 
-      const { affirmation } = await motivationalAffirmations({ 
+      const { response } = await getAssistantResponse({ 
         userInput: input.userInput,
         activityHistory,
         tasks: taskSummary,
       });
       
-      if (!affirmation) {
-        throw new Error("Empty affirmation received.");
+      if (!response) {
+        // This case should be handled by the flow's fallback now, but we keep it for safety.
+        throw new Error("Empty response received from AI.");
       }
       
-      const { audioDataUri } = await textToSpeech(affirmation);
+      const { audioDataUri } = await textToSpeech(response);
       
-      return { affirmation, audioDataUri };
+      return { response, audioDataUri };
     } catch (error) {
-      console.error("Error in getAffirmationWithAudio:", error);
-      const fallbackAffirmation = "There is a strength within you that is greater than any obstacle, Professor.";
-      return { affirmation: fallbackAffirmation, audioDataUri: "" };
+      console.error("Error in getAssistantResponseWithAudio:", error);
+      const fallbackResponse = "There is a strength within you that is greater than any obstacle, Professor.";
+      return { response: fallbackResponse, audioDataUri: "" };
     }
 }
 

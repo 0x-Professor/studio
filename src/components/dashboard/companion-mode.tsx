@@ -4,7 +4,7 @@ import { useState, useTransition, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { getAffirmationWithAudio } from "@/app/actions";
+import { getAssistantResponseWithAudio } from "@/app/actions";
 import { Cpu, Mic, Send, User } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -100,8 +100,8 @@ export function CompanionMode() {
     setInput("");
 
     startTransition(async () => {
-      const result = await getAffirmationWithAudio({ userInput: currentInput });
-      setMessages((prev) => [...prev, { role: "assistant", content: result.affirmation }]);
+      const result = await getAssistantResponseWithAudio({ userInput: currentInput });
+      setMessages((prev) => [...prev, { role: "assistant", content: result.response }]);
       
       if (result.audioDataUri && audioRef.current) {
         audioRef.current.src = result.audioDataUri;
