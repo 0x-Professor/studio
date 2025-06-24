@@ -1,9 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { suggestBreakSchedule, type SuggestBreakScheduleInput } from "@/ai/flows/suggest-break-schedule";
 import { Coffee } from "lucide-react";
+import { isAiEnabled } from "@/ai/genkit";
 
 export async function BreakSchedule({ scheduleInfo }: { scheduleInfo: SuggestBreakScheduleInput }) {
-  const { breakSchedule } = await suggestBreakSchedule(scheduleInfo).catch(() => ({ breakSchedule: "Remember to take a 5-minute break every hour to stretch and rest your eyes." }));
+  let breakSchedule = "Please set your GOOGLE_API_KEY in the .env file to enable AI features.";
+
+  if (isAiEnabled()) {
+    try {
+      const result = await suggestBreakSchedule(scheduleInfo);
+      breakSchedule = result.breakSchedule;
+    } catch (e) {
+      console.error(e);
+      breakSchedule = "Remember to take a 5-minute break every hour to stretch and rest your eyes.";
+    }
+  }
 
   return (
     <Card>

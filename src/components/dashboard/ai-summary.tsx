@@ -1,9 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { summarizeAppUsage, type SummarizeAppUsageInput } from "@/ai/flows/summarize-app-usage";
 import { FileText } from "lucide-react";
+import { isAiEnabled } from "@/ai/genkit";
 
 export async function AiSummary({ appUsageData }: { appUsageData: SummarizeAppUsageInput }) {
-  const { summary } = await summarizeAppUsage(appUsageData).catch(() => ({ summary: "Could not generate summary at this time." }));
+  let summary = "Please set your GOOGLE_API_KEY in the .env file to enable AI features.";
+  
+  if (isAiEnabled()) {
+    try {
+      const result = await summarizeAppUsage(appUsageData);
+      summary = result.summary;
+    } catch (e) {
+      console.error(e);
+      summary = "Could not generate summary at this time.";
+    }
+  }
 
   return (
     <Card>

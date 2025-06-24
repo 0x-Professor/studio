@@ -6,7 +6,7 @@ import { ProductivityTips } from "@/components/dashboard/productivity-tips";
 import { BreakSchedule } from "@/components/dashboard/break-schedule";
 import { CompanionMode } from "@/components/dashboard/companion-mode";
 import type { AppUsage } from "@/types";
-import { motivationalAffirmations } from "@/ai/flows/motivational-affirmations";
+import { getAffirmation } from "@/app/actions";
 
 const appUsageData: AppUsage[] = [
   { app: "chrome", hours: 4.5 },
@@ -33,7 +33,7 @@ const scheduleInfoForAI = {
 
 
 export default async function Home() {
-  const { affirmation: initialAffirmation } = await motivationalAffirmations({ mood: "productive" });
+  const initialAffirmation = await getAffirmation({ mood: "productive" });
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

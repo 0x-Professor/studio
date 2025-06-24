@@ -1,9 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { proactiveProductivityTips, type ProactiveProductivityTipsInput } from "@/ai/flows/proactive-productivity-tips";
 import { Lightbulb } from "lucide-react";
+import { isAiEnabled } from "@/ai/genkit";
 
 export async function ProductivityTips({ userInfo }: { userInfo: ProactiveProductivityTipsInput }) {
-  const { productivityTips } = await proactiveProductivityTips(userInfo).catch(() => ({ productivityTips: ["Take regular breaks to stay fresh."] }));
+  let productivityTips = ["Please set your GOOGLE_API_KEY in the .env file to enable AI features."];
+
+  if (isAiEnabled()) {
+    try {
+      const result = await proactiveProductivityTips(userInfo);
+      productivityTips = result.productivityTips;
+    } catch(e) {
+      console.error(e);
+      productivityTips = ["Take regular breaks to stay fresh."];
+    }
+  }
 
   return (
     <Card>
