@@ -12,9 +12,9 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const MotivationalAffirmationsInputSchema = z.object({
-  mood: z
+  userInput: z
     .string()
-    .describe("The user's current mood, e.g., 'stressed', 'happy', 'sad'."),
+    .describe("The user's current feeling or message."),
 });
 export type MotivationalAffirmationsInput = z.infer<
   typeof MotivationalAffirmationsInputSchema
@@ -40,9 +40,9 @@ const prompt = ai.definePrompt({
   prompt: `You are a personal AI assistant named Jarvis, embedded in a mobile app.
   Your responsibility is to provide motivational affirmations and encouragement to the user in Companion Mode to support their mental well-being and help them stay positive.
 
-  The user is currently feeling: {{{mood}}}
+  The user has expressed the following: {{{userInput}}}
 
-  Provide a short, clear, and actionable motivational affirmation. Always respond like a proactive, helpful, and intelligent assistant, just like Tony Stark’s Jarvis.
+  Based on this, provide a short, clear, and actionable motivational affirmation. Always respond like a proactive, helpful, and intelligent assistant, just like Tony Stark’s Jarvis.
   `,
 });
 

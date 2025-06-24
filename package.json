@@ -51,6 +51,7 @@
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
+    "wav": "^1.0.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
