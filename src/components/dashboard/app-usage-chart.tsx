@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
@@ -35,6 +35,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function AppUsageChart({ data }: AppUsageChartProps) {
+  const chartProps = { width: 500, height: 300 } satisfies ComponentProps<typeof BarChart>;
   const [appUsageData, setAppUsageData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -57,25 +58,23 @@ export function AppUsageChart({ data }: AppUsageChartProps) {
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer config={chartConfig} className="w-full h-full min-h-[300px]">
-          <ResponsiveContainer width="100%" height="100%" data={appUsageData}>
-            <BarChart data={data} accessibilityLayer margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="app"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label || value}
-              />
-              <YAxis />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-              <Bar dataKey="hours" radius={[8, 8, 0, 0]} data={appUsageData}>
-                {data.map((entry) => (
-                    <Cell key={`cell-${entry.app}`} fill={chartConfig[entry.app as keyof typeof chartConfig]?.color} />
+          <BarChart data={appUsageData} accessibilityLayer {...chartProps}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="app"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label || value}
+            />
+            <YAxis />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+            <Bar dataKey="hours" radius={[8, 8, 0, 0]}>
+              {appUsageData.map((entry) => (
+                <Cell key={`cell-${entry.app}`} fill={chartConfig[entry.app as keyof typeof chartConfig]?.color} />
                 ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+            </Bar>
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>

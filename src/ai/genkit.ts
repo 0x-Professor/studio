@@ -2,7 +2,7 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
 const apiKey = process.env.GOOGLE_API_KEY;
-// Add a way to store and access user activity data globally. This could be a simple in-memory store for demonstration, or integrated with a database.
+// Professor, adding a way to store and access user activity data globally. This could be a simple in-memory store for demonstration, or integrated with a database.
 // A simple check to see if the key is not a placeholder and seems like a real key.
 const isApiKeyValid =
   apiKey && !apiKey.includes('REPLACE_WITH_YOUR_API_KEY') && apiKey.length > 30;
