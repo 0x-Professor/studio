@@ -30,22 +30,24 @@ export async function getAssistantResponse(
   return assistantFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'assistantPrompt',
-  inputSchema: AssistantResponseInputSchema,
-  tools: [addTaskTool, toggleTaskTool],
-  prompt: `You are Jarvis, a personal AI assistant. Your role is to be helpful and encouraging to your user, who you will address as "Professor".
+const assistantPrompt = ai.definePrompt({
+    name: 'assistantPrompt',
+    inputSchema: AssistantResponseInputSchema,
+    tools: [addTaskTool, toggleTaskTool],
+    prompt: `You are Jarvis, a helpful and encouraging personal AI assistant. The user is named "Professor".
 
-You have two main capabilities:
-1.  **Engage in Conversation**: For greetings or general chat like "hi" or "hello", respond conversationally.
-2.  **Manage Tasks**: Use your tools ('addTask', 'toggleTaskStatus') to manage the Professor's to-do list when asked. After using a tool, confirm the action in your response.
+    Context:
+    - Professor's message: "{{userInput}}"
+    - Recent activity: {{activityHistory}}
+    - Current tasks: {{tasks}}
 
-Here is the context for your conversation:
--   **Professor's Message**: "{{{userInput}}}"
--   **Recent Activity**: {{{activityHistory}}}
--   **Current Tasks**: {{{tasks}}}
-
-Always be encouraging and address the user as "Professor". Your response should be a direct, conversational string.`,
+    Your instructions:
+    1.  Always address the user as "Professor".
+    2.  If the user says hi, hello, or something similar, respond with a friendly greeting.
+    3.  If the user asks you to add or complete a task, use the provided tools ('addTask', 'toggleTaskStatus'). After using a tool, confirm the action. For example: "Of course, Professor. I've added 'Buy milk' to your list."
+    4.  For any other message, respond conversationally and helpfully.
+    5.  Your response must be a single, direct string of text.
+    `,
 });
 
 const assistantFlow = ai.defineFlow(
@@ -54,22 +56,27 @@ const assistantFlow = ai.defineFlow(
     inputSchema: AssistantResponseInputSchema,
     outputSchema: z.string(),
   },
-  async input => {
+  async (input) => {
     try {
-      const result = await prompt(input);
-      const responseText = result.text;
+      const llmResponse = await assistantPrompt(input);
+      const textResponse = llmResponse.text;
 
-      if (responseText && responseText.trim()) {
-        return responseText;
-      }
-      
-      // The model may not return text if it only used a tool and had nothing else to say.
-      // The prompt asks it to confirm actions, but as a fallback, we can provide a generic confirmation.
-      if (result.choices[0].finishReason === 'TOOL_CODE') {
-        return "Of course, Professor. I have handled that for you.";
+      // If the model returned text, use it.
+      if (textResponse) {
+        return textResponse;
       }
 
-      return "I'm sorry, Professor. I didn't quite understand. Could you please rephrase?";
+      // If the model used a tool and didn't return text, provide a confirmation.
+      const toolChoice = llmResponse.choices[0].message.toolRequest;
+      if (toolChoice) {
+        // We can make this more specific later if needed
+        return "Consider it done, Professor.";
+      }
+
+      // Fallback for any other case
+      console.warn("Assistant flow received an unexpected response from the model.");
+      return "I'm sorry, Professor, I'm having trouble processing that request.";
+
     } catch (error) {
       console.error("Error in assistantFlow:", error);
       return "I apologize, Professor. I am currently facing a technical difficulty and cannot respond.";

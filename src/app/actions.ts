@@ -21,15 +21,16 @@ export async function getAssistantResponseWithAudio(input: Pick<AssistantRespons
         ? `Pending: ${tasks.filter(t => !t.completed).map(t => t.text).join(', ')}. Completed: ${tasks.filter(t => t.completed).map(t => t.text).join(', ')}.`
         : "No tasks in the list.";
 
-      // getAssistantResponse now returns a string directly.
       const response = await getAssistantResponse({ 
         userInput: input.userInput,
         activityHistory,
         tasks: taskSummary,
       });
       
-      if (!response) {
-        return { response: "", audioDataUri: "" };
+      // If for any reason the response is empty, don't attempt to generate audio.
+      if (!response || response.trim() === "") {
+        const fallback = "I'm sorry, Professor. I didn't quite understand. Could you please rephrase?";
+        return { response: fallback, audioDataUri: "" };
       }
       
       const { audioDataUri } = await textToSpeech(response);
@@ -41,8 +42,7 @@ export async function getAssistantResponseWithAudio(input: Pick<AssistantRespons
       if (errorMessage.includes("API_KEY_INVALID") || errorMessage.includes("API key not valid")) {
            return { response: "Professor, it seems my connection is not configured correctly. Please check the API key.", audioDataUri: "" };
       }
-      const fallbackResponse = "I'm sorry, Professor. I seem to have encountered a temporary issue. Please try again.";
-      return { response: fallbackResponse, audioDataUri: "" };
+      return { response: "I apologize, Professor. I am currently facing a technical difficulty and cannot respond.", audioDataUri: "" };
     }
 }
 
