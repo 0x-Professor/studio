@@ -7,7 +7,7 @@ export function Header() {
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <div className="flex items-center gap-4">
           <Cpu className="h-8 w-8 text-primary text-glow" />
-          <h1 className="text-2xl font-bold font-headline text-primary text-glow">MazharAI</h1>
+          <h1 className="text-2xl font-bold font-headline text-primary text-glow">AI-Assistant</h1>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
